@@ -1,5 +1,5 @@
 { 
- "event": "PublishWeather", 
+ "event": "PublishToEventHub", 
  "url": "https://<YOUR_SERVICEBUS_NAMESPACE_NAME>.servicebus.windows.net/<YOUR_EVENTHUB_NAME>/messages", 
  "requestType": "POST", 
  "json": { 
