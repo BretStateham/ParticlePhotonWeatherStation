@@ -1,0 +1,23 @@
+{ 
+ "event": "PublishWeather", 
+ "url": "https://<YOUR_SERVICEBUS_NAMESPACE_NAME>.servicebus.windows.net/<YOUR_EVENTHUB_NAME>/messages", 
+ "requestType": "POST", 
+ "json": { 
+ "subject": "{{s}}", 
+ "unitofmeasure": "{{u}}", 
+ "measurename": "{{m}}", 
+ "value": "{{v}}", 
+ "organization": "{{o}}", 
+ "displayname": "{{d}}", 
+ "location": "{{l}}", 
+ "timecreated": "{{SPARK_PUBLISHED_AT}}", 
+ "guid": "{{SPARK_CORE_ID}}"
+
+},
+
+ "azure_sas_token": { 
+ "key_name": "<YOUR_SAS_POLICY_NAME>", 
+ "key": "<YOUR_SAS_POLICY_KEY" 
+ }, 
+ "mydevices": true 
+}
