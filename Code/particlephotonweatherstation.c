@@ -48,31 +48,15 @@ void loop()
   
   //Generate the temperature data payload
   char payload[255];
-  snprintf(payload, sizeof(payload), 
-    "{ \"s\":\"wthr\", 
-       \"u\":\"F\",
-       \"m\":\"Temperature\",
-       \"v\": %f,
-       \"o\":\"%s\",
-       \"d\":\"%s\",
-       \"l\":\"%s\"}", 
-       Locn, Org, f, Disp);
+  snprintf(payload, sizeof(payload),"{\"s\":\"wthr\",\"u\":\"F\",\"m\":\"Temperature\",\"v\": %f,\"o\":\"%s\",\"d\":\"%s\",\"l\":\"%s\"}",f,Org,Disp,Locn);
        
   //Send the temprature data payload
   Spark.publish("PublishToEventHub", payload);
   //Wait for the specified "sendDelay" before sending the humidity data...    
   delay(sendDelay);
     
-    
   //Generate the humidity data payload
-  snprintf(payload, sizeof(payload), 
-    "{ \"s\":\"wthr\", 
-       \"u\":\"%%\",
-       \"m\":\"Humidity\",
-       \"v\": %f,
-       \"o\":\"%s\",
-       \"d\":\"%s\",
-       \"l\":\"%s\"}", Locn, Org, h, Disp);
+  snprintf(payload, sizeof(payload),"{\"s\":\"wthr\",\"u\":\"%%\",\"m\":\"Humidity\",\"v\": %f,\"o\":\"%s\",\"d\":\"%s\",\"l\":\"%s\"}",h,Org,Disp,Locn);
        
   //Send the humidity data payload
   Spark.publish("PublishToEventHub", payload);
