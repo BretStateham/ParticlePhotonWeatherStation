@@ -16,7 +16,7 @@
 
   "azure_sas_token": { 
     "key_name": "<YOUR_SAS_POLICY_NAME>", 
-    "key": "<YOUR_SAS_POLICY_KEY" 
+    "key": "<YOUR_SAS_POLICY_KEY>" 
   },
   
   "mydevices": true 
