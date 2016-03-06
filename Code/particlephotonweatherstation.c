@@ -51,7 +51,7 @@ void loop()
   snprintf(payload, sizeof(payload),"{\"s\":\"wthr\",\"u\":\"F\",\"m\":\"Temperature\",\"v\": %f,\"o\":\"%s\",\"d\":\"%s\",\"l\":\"%s\"}",f,Org,Disp,Locn);
        
   //Send the temprature data payload
-  Spark.publish("PublishToEventHub", payload);
+  Particle.publish("PublishToEventHub", payload);
   //Wait for the specified "sendDelay" before sending the humidity data...    
   delay(sendDelay);
     
@@ -59,7 +59,7 @@ void loop()
   snprintf(payload, sizeof(payload),"{\"s\":\"wthr\",\"u\":\"%%\",\"m\":\"Humidity\",\"v\": %f,\"o\":\"%s\",\"d\":\"%s\",\"l\":\"%s\"}",h,Org,Disp,Locn);
        
   //Send the humidity data payload
-  Spark.publish("PublishToEventHub", payload);
+  Particle.publish("PublishToEventHub", payload);
   //wait for the specified "sendDelay" before looping...
   delay(sendDelay);
 }
