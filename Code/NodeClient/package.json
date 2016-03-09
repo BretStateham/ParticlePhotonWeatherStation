@@ -1,0 +1,15 @@
+{
+  "name": "nodeclient",
+  "version": "1.0.0",
+  "description": "Node.js Azure Event Hub client sample",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "azure-event-hubs": "0.0.1",
+    "bluebird": "^3.3.4"
+  }
+}
