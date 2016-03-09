@@ -8,7 +8,9 @@ var EventHubClient = require('azure-event-hubs').Client;
 // The Event Hubs SDK can also be used with an Azure IoT Hub connection string.
 // In that case, the eventHubPath variable is not used and can be left undefined.
 var connectionString = '[Event Hubs Connection String]';
-var eventHubPath = '[Event Hub Path]';
+var eventHubPath = '[Event Hub Name (Path)]';
+var consumerGroup = '$Default';
+
 
 var sendEvent = function (eventBody) {
   return function (sender) {
@@ -31,22 +33,22 @@ var client = EventHubClient.fromConnectionString(connectionString, eventHubPath)
 var receiveAfterTime = Date.now() - 5000;
 
 client.open()
-      .then(client.getPartitionIds.bind(client))
-      .then(function (partitionIds) {
-        return partitionIds.map(function (partitionId) {
-          return client.createReceiver(
-              '$Default',  //Consumer Group Name
-              partitionId, //Current Partition ID being setup
-              { 'startAfterTime': receiveAfterTime }  //Start offset
-            ).then(function (receiver) {
-              receiver.on('errorReceived', printError);
-              receiver.on('message', printEvent);
-          });
+  .then(client.getPartitionIds.bind(client))
+  .then(function (partitionIds) {
+    return partitionIds.map(function (partitionId) {
+      return client.createReceiver(
+          consumerGroup,  //Consumer Group Name from above
+          partitionId, //Current Partition ID being setup
+          { 'startAfterTime': receiveAfterTime }  //Start offset
+      ).then(function (receiver) {
+          receiver.on('errorReceived', printError);
+          receiver.on('message', printEvent);
         });
-      })
-    // The send commands have been commented out since we want to just receive
-    // messages from the Photon sender, but you can see how you could use this code
-    // to send messages as well..
-    //   .then(client.createSender.bind(client))
-    //   .then(sendEvent('foo'))
-      .catch(printError);
+    });
+  })
+  // The send commands have been commented out since we want to just receive
+  // messages from the Photon sender, but you can see how you could use this code
+  // to send messages as well..
+  //   .then(client.createSender.bind(client))
+  //   .then(sendEvent('foo'))
+  .catch(printError);
