@@ -21,6 +21,16 @@ var sendEvent = function (eventBody) {
 };
 
 // Log a received message body out to the console
+// See node_modules/azure-event-hubs/lib/eventdata.js
+// for properties other than "body" that can be shown
+// about a received event.  Other properties include
+//   ehEvent.partitionKey
+//   ehEvent.body
+//   ehEvent.enqueuedTimeUtc
+//   ehEvent.offset
+//   ehEvent.properties
+//   ehEvent.sequenceNumber
+//   ehEvent.systemProperties 
 var printEvent = function (ehEvent) {
   console.log('Event Received: ');
   console.log(JSON.stringify(ehEvent.body));
@@ -32,19 +42,33 @@ var printError = function (err) {
   console.error(err.message);
 };
 
+// Declare the Event Hub client for our event hub given the 
+// Event Hub Connection String and Event Hub Name from above
 var client = EventHubClient.fromConnectionString(connectionString, eventHubPath);
+
+// Only receive messages after the current date/time (or five seconds before)
 var receiveAfterTime = Date.now() - 5000;
 
+// Open the client, this actually connects to the event hub
 client.open()
+  // Retrieve the partition information from the event hub
   .then(client.getPartitionIds.bind(client))
+  // Then take those partitions
   .then(function (partitionIds) {
+    // And for each one
     return partitionIds.map(function (partitionId) {
+      // Create an Event Hub Reciever to listen for messages
+      // On that partition, for the given consumerGroup
+      // and only get messages after the receiveAfterTime from above 
       return client.createReceiver(
           consumerGroup,  
           partitionId, 
           { 'startAfterTime': receiveAfterTime }  
+      // Then take that receiver and...
       ).then(function (receiver) {
+          // Wire the "errorReceived" event to printError from above 
           receiver.on('errorReceived', printError);
+          // Wire the "message" event to printEvent above 
           receiver.on('message', printEvent);
         });
     });
@@ -54,4 +78,5 @@ client.open()
   // to send messages as well..
   //   .then(client.createSender.bind(client))
   //   .then(sendEvent('foo'))
+  // Otherwise, catch any errors, and print them
   .catch(printError);
