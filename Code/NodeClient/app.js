@@ -4,13 +4,20 @@
 'use strict';
 var Promise = require('bluebird');
 var EventHubClient = require('azure-event-hubs').Client;
+var moment = require('moment');
 
 // The Event Hubs SDK can also be used with an Azure IoT Hub connection string.
 // In that case, the eventHubPath variable is not used and can be left undefined.
-var connectionString = '[Event Hubs Connection String]';
+var connectionString = '[Event Hub Connection String]';
 var eventHubPath = '[Event Hub Name (Path)]';
-var consumerGroup = '$Default';  //Change to specific group if desired
+var client = EventHubClient.fromConnectionString(connectionString, eventHubPath);
 
+// Set the consumer group and start time offset for the event hub receivers
+// If you have created a consumer group for your node app to use, enter it here
+var consumerGroup = '$Default';  
+// Set the consumer up to receive only new messages, not all the old ones as well
+// set receiveAfterTime to null to read all of the messages from the beginning 
+var receiveAfterTime = Date.now() - 5000;
 
 // Send the given eventBody to the Event Hub
 var sendEvent = function (eventBody) {
@@ -22,18 +29,16 @@ var sendEvent = function (eventBody) {
 
 // Log a received message body out to the console
 var printEvent = function (ehEvent) {
-  console.log('Event Received: ');
-  console.log(JSON.stringify(ehEvent.body));
-  console.log('');
+  var body = ehEvent.body
+  var created = moment(body.timecreated);
+  var val = Number(body.value);
+  console.log(created.format("hh:mm:ss a") + " - " + body.measurename + ": " + val.toFixed(2) + body.unitofmeasure);
 };
 
 // Log an error to the console
 var printError = function (err) {
   console.error(err.message);
 };
-
-var client = EventHubClient.fromConnectionString(connectionString, eventHubPath);
-var receiveAfterTime = Date.now() - 5000;
 
 client.open()
   .then(client.getPartitionIds.bind(client))

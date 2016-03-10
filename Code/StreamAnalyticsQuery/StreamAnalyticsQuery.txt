@@ -1,0 +1,39 @@
+CREATE TABLE ppwsbsshub (
+  coreid nvarchar(max),
+  data nvarchar(max),
+  displayname nvarchar(max),
+  event nvarchar(max),
+  EventEnqueuedUtcTime datetime,
+  EventProcessedUtcTime datetime,  
+  guid nvarchar(max),
+  location nvarchar(max),
+  measurename nvarchar(max),
+  organization nvarchar(max),
+  PartitionId bigint,
+  published_at datetime,
+  subject nvarchar(max),
+  timecreated datetime,
+  unitofmeasure nvarchar(max),
+  value float
+);
+
+SELECT
+   coreid
+  ,displayname
+  ,event
+  ,EventEnqueuedUtcTime
+  ,EventProcessedUtcTime
+  ,guid
+  ,location
+  ,measurename
+  ,organization
+  ,PartitionId
+  ,published_at
+  ,subject
+  ,timecreated
+  ,unitofmeasure
+  ,value
+INTO
+    <name>data
+FROM
+    <name>hub;

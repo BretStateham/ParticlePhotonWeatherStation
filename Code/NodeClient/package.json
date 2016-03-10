@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "azure-event-hubs": "0.0.1",
-    "bluebird": "^3.3.4"
+    "bluebird": "^3.3.4",
+    "moment": "^2.12.0"
   }
 }
