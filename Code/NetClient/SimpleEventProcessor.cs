@@ -36,12 +36,10 @@ namespace NetClient
 
       foreach (EventData eventData in messages)
       {
-        Message message;
-
-        string data = Encoding.UTF8.GetString(eventData.GetBytes());
-
         try
         {
+          Message message;
+          string data = Encoding.UTF8.GetString(eventData.GetBytes());
           message = JsonConvert.DeserializeObject<Message>(data);
           Console.WriteLine(string.Format("{0:hh:mm:ss tt} - {1}: {2:0.00}{3}", message.TimeCreated.ToLocalTime(), message.MeasureName, message.Value, message.UnitOfMeasure));
         }

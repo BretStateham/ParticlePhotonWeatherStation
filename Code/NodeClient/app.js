@@ -19,14 +19,6 @@ var consumerGroup = '$Default';
 // set receiveAfterTime to null to read all of the messages from the beginning 
 var receiveAfterTime = Date.now() - 5000;
 
-// Send the given eventBody to the Event Hub
-var sendEvent = function (eventBody) {
-  return function (sender) {
-    console.log('Sending Event: ' + eventBody);
-    return sender.send(eventBody);
-  };
-};
-
 // Log a received message body out to the console
 var printEvent = function (ehEvent) {
   var body = ehEvent.body
@@ -38,6 +30,14 @@ var printEvent = function (ehEvent) {
 // Log an error to the console
 var printError = function (err) {
   console.error(err.message);
+};
+
+// Send the given eventBody to the Event Hub
+var sendEvent = function (eventBody) {
+  return function (sender) {
+    console.log('Sending Event: ' + eventBody);
+    return sender.send(eventBody);
+  };
 };
 
 client.open()

@@ -30,6 +30,7 @@ int sendDelay = 6000;
 void setup()
 {
   dht.begin();
+  Serial.begin(9600);
   delay(10000);
 }
 
@@ -46,20 +47,44 @@ void loop()
   // Read temperature as Farenheit
   float f = dht.getTempFarenheit();
   
-  //Generate the temperature data payload
+  // Check if any reads failed. If any did, emit details to serial port for monitoring
+  // and exit the loop early (to try again).
+  if (isnan(h) || isnan(t) || isnan(f)) {
+    Serial.println("");
+    Serial.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    Serial.println("Failed to read from DHT sensor!");
+    Serial.println("h=" + String(h) + " t=" + String(t) + " f=" + String(f));
+    Serial.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    Serial.println("");
+    return;
+  } 
+  
+  // Emit the sensor values to the Serial port for monitoring
+  Serial.println();
+  Serial.println("----------");
+  Serial.println();
+  Serial.println("h=" + String(h) + " t=" + String(t) + " f=" + String(f));
+
+  // Generate the temperature data payload
   char payload[255];
-  snprintf(payload, sizeof(payload),"{\"s\":\"wthr\",\"u\":\"F\",\"m\":\"Temperature\",\"v\": %f,\"o\":\"%s\",\"d\":\"%s\",\"l\":\"%s\"}",f,Org,Disp,Locn);
+  snprintf(payload, sizeof(payload),"{\"s\":\"Weather\",\"u\":\"F\",\"m\":\"Temperature\",\"v\": %f,\"o\":\"%s\",\"d\":\"%s\",\"l\":\"%s\"}",f,Org,Disp,Locn);
+  //Emit the payload to the serial port for monitoring purposes
+  Serial.println(payload);
+  
        
-  //Send the temprature data payload
+  // Send the temperature data payload
   Particle.publish("PublishToEventHub", payload);
   //Wait for the specified "sendDelay" before sending the humidity data...    
   delay(sendDelay);
     
-  //Generate the humidity data payload
-  snprintf(payload, sizeof(payload),"{\"s\":\"wthr\",\"u\":\"%%\",\"m\":\"Humidity\",\"v\": %f,\"o\":\"%s\",\"d\":\"%s\",\"l\":\"%s\"}",h,Org,Disp,Locn);
-       
-  //Send the humidity data payload
+  // Generate the humidity data payload
+  snprintf(payload, sizeof(payload),"{\"s\":\"Weather\",\"u\":\"%%\",\"m\":\"Humidity\",\"v\": %f,\"o\":\"%s\",\"d\":\"%s\",\"l\":\"%s\"}",h,Org,Disp,Locn);
+  // Emit the payload to the serial port for monitoring purposes
+  Serial.println(payload);
+
+  // Send the humidity data payload
   Particle.publish("PublishToEventHub", payload);
-  //wait for the specified "sendDelay" before looping...
+  // wait for the specified "sendDelay" before looping...
   delay(sendDelay);
 }
+
